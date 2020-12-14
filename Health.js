@@ -11,7 +11,7 @@ class Health{
 	display(){
 		for(var i = 0;i<this.hp;i++){
 			//creates hearts
-			image(this.img,30*i,40,30,30);
+			image(this.img,30*i + Mario.x - 75,Mario.y-60,30,30);
 		}
 	}
 
