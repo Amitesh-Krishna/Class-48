@@ -4,6 +4,7 @@ var gameState = 1;
 var obs = [];
 var enemies = [];
 var fruits = [];
+var fruits2 = [];
 var HpBar;
 var score = 0;
 var bgColor;
@@ -96,16 +97,47 @@ function setup() {
 	wall4.shapeColor = "grey";
 	
 	enemy5 = new Enemy(475,windowHeight-60);
-	enemies.push(enemy1);
-
+	enemy5.sprite.visible = false;
+	
 	enemy6 = new Enemy(875,windowHeight-60);
-	enemies.push(enemy2);
+	enemy6.sprite.visible = false;
 
 	enemy7 = new Enemy(1275,windowHeight-60);
-	enemies.push(enemy3);
+	enemy7.sprite.visible = false;
 
 	enemy8 = new Enemy(1675,windowHeight-60);
-	enemies.push(enemy4);
+	enemy8.sprite.visible = false;
+
+	enemy9 = new Enemy(2075,windowHeight-60);
+	enemy9.sprite.visible = false;
+	
+	enemy10 = new Enemy(2475,windowHeight-60);
+	enemy10.sprite.visible = false;
+
+	for(var j = 15;j<3000;j+=200){
+		var fruitI = createSprite(i,750,20,20);
+		fruitI.addImage(fruitImg);
+		fruits2.push(fruitI);
+	}
+
+	TheSewerPipe = createSprite(2875,windowHeight-90,200,100);
+	TheSewerPipe.shapeColor = "lime";
+	TheSewerPipe.visible = false;
+
+	//Level 3
+
+	Ground3 = createSprite(1472,windowHeight-15,3000,40);
+	Ground3.shapeColor = "brown";
+
+	wall5 = createSprite(-20,windowHeight/2,20,windowHeight);
+	wall5.shapeColor = "grey";
+
+	wall6 = createSprite(2980,windowHeight/2,20,windowHeight);
+	wall6.shapeColor = "grey";
+
+	DaBoss = createSprite(1500,windowHeight-200,400,400);
+	DaBoss.visible = false;
+	DaBoss.addImage(loadImage("Img/Boss.png"))
 }
 
 function draw() {
@@ -160,7 +192,19 @@ function draw() {
 	}
 
 	if(gameState == 2){
-		
+		if(Mario.isTouching(TheSewerPipe)){
+			lvl3();
+		}
+	}
+
+	if(gameState == 3){
+		if(Mario.isTouching(DaBoss)){
+			gameState = 4;
+		}
+	}
+
+	if(gameState == 4){
+		GameEnd();
 	}
 }
 
@@ -195,7 +239,7 @@ function Score(){
 }
 
 function Lvl2(){
-	color(0,155,255);
+	bgColor = rgb(0,155,255);
 	Mario.x = 100;
 	
 	for(var i = 0;i<obs.length;i++){
@@ -210,11 +254,83 @@ function Lvl2(){
 		enemies[k].sprite.destroy();
 	}
 
+	town.x = 275;
+
 	obs = [];
-	fruits = [];
+	fruits = fruits2;
 	enemies = [];
 
 	obs.push(Ground2);
 	obs.push(wall3);
 	obs.push(wall4);
+
+	enemy5.sprite.visible = true;
+	enemy6.sprite.visible = true;
+	enemy7.sprite.visible = true;
+	enemy8.sprite.visible = true;
+	enemy9.sprite.visible = true;
+	enemy10.sprite.visible = true;
+
+	enemies.push(enemy5);
+	enemies.push(enemy6);
+	enemies.push(enemy7);
+	enemies.push(enemy8);
+	enemies.push(enemy9);
+	enemies.push(enemy10);
+
+	TheSewerPipe.visible = true;
+}
+
+function lvl3(){
+	gameState = 3;
+	bgColor = rgb(0,128,0);
+
+	for(var i = 0;i<obs.length;i++){
+		obs[i].destroy();
+	}
+
+	for(var j = 0;j<fruits.length;j++){
+		fruits[j].destroy();
+	}
+
+	for(var k = 0;k<enemies.length;k++){
+		enemies[k].sprite.destroy();
+	}
+
+	TheSewerPipe.destroy();
+
+	town.destroy();
+
+	obs = [];
+	fruits = [];
+	enemies = [];
+
+	obs.push(Ground3);
+	obs.push(wall5);
+	obs.push(wall6);
+
+	DaBoss.visible = true;
+}
+
+function GameEnd(){
+	bgColor = "white";
+
+	for(var i = 0;i<obs.length;i++){
+		obs[i].destroy();
+	}
+
+	for(var j = 0;j<fruits.length;j++){
+		fruits[j].destroy();
+	}
+
+	for(var k = 0;k<enemies.length;k++){
+		enemies[k].sprite.destroy();
+	}
+
+	DaBoss.destroy();
+
+	camera.x = Mario.x;
+	Mario.velocityY = 0;
+	Mario.y += 10;
+	camera.y += 10;
 }
